@@ -184,12 +184,11 @@ function playSound() {
     const card = currentDeck[currentIndex];
     const mainLang = document.getElementById('main-language').value; 
     
-    // 1. Create a "safe" filename (removes spaces/special characters)
-    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim();
+    // Convert to lowercase to match the filenames on GitHub
+    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim().toLowerCase(); 
     
-    // 2. Build the path
     const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
-    console.log("Attempting to play:", audioPath); // This helps you debug!
+    console.log("Attempting to play:", audioPath);
 
     const audio = new Audio(audioPath);
     
@@ -266,4 +265,5 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
 
