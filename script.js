@@ -182,19 +182,27 @@ function updateCard() {
  */
 function playSound() {
     const card = currentDeck[currentIndex];
-    const mainLang = document.getElementById('main-language').value; // 'en', 'zh', or 'idn'
+    const mainLang = document.getElementById('main-language').value; 
     
-    // Create the path using the language folder
+    // 1. Create a "safe" filename (removes spaces/special characters)
     const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim();
+    
+    // 2. Build the path
     const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
+    console.log("Attempting to play:", audioPath); // This helps you debug!
 
     const audio = new Audio(audioPath);
     
     audio.play().catch(err => {
-        console.log("MP3 not found, using browser voice fallback");
-        // Fallback to browser voice if the file isn't uploaded yet
+        console.warn("MP3 not found at " + audioPath + ". Using browser voice.");
+        
+        // 3. Fallback to browser voice so your kids still hear the word
         const utterance = new SpeechSynthesisUtterance(card[mainLang]);
-        utterance.lang = mainLang === 'zh' ? 'zh-TW' : (mainLang === 'idn' ? 'id-ID' : 'en-US');
+        // Set the correct voice for the language
+        if (mainLang === 'zh') utterance.lang = 'zh-TW';
+        else if (mainLang === 'idn') utterance.lang = 'id-ID';
+        else utterance.lang = 'en-US';
+        
         window.speechSynthesis.speak(utterance);
     });
 }
@@ -258,3 +266,4 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
