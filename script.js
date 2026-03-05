@@ -184,20 +184,26 @@ function playSound() {
     const card = currentDeck[currentIndex];
     const mainLang = document.getElementById('main-language').value; 
     
-    // Convert to lowercase to match the filenames on GitHub
-    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim().toLowerCase(); 
+    // Check if the 🐢 Slow Mode checkbox is ticked
+    const isSlow = document.getElementById('slow-mode').checked;
     
+    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim().toLowerCase(); 
     const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
-    console.log("Attempting to play:", audioPath);
 
     const audio = new Audio(audioPath);
     
+    // Adjust speed for the MP3 file if slow mode is on
+    if (isSlow) {
+        audio.playbackRate = 0.6; 
+    }
+
     audio.play().catch(err => {
-        console.warn("MP3 not found at " + audioPath + ". Using browser voice.");
-        
-        // 3. Fallback to browser voice so your kids still hear the word
+        console.warn("MP3 not found. Using browser voice.");
         const utterance = new SpeechSynthesisUtterance(card[mainLang]);
-        // Set the correct voice for the language
+        
+        // Adjust speed for the browser voice if slow mode is on
+        utterance.rate = isSlow ? 0.6 : 1.0; 
+
         if (mainLang === 'zh') utterance.lang = 'zh-TW';
         else if (mainLang === 'idn') utterance.lang = 'id-ID';
         else utterance.lang = 'en-US';
@@ -272,6 +278,7 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
 
 
 
