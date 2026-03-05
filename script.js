@@ -224,9 +224,16 @@ let currentX = 0;
 const card = document.querySelector('.card');
 
 card.addEventListener('touchstart', (e) => {
-    // If the user taps a button or an icon, don't start the swipe logic
-    if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.classList.contains('play-icon')) {
-        return; 
+    // UPDATED LINE: Added checks for text, emojis, and images
+    if (
+        e.target.tagName === 'BUTTON' || 
+        e.target.closest('button') || 
+        e.target.classList.contains('play-icon') ||
+        e.target.id === 'emoji-display' || 
+        e.target.id === 'primary-word' || 
+        e.target.id === 'card-img'
+    ) {
+        return; // This stops the swipe logic from starting
     }
 
     startX = e.touches[0].clientX;
@@ -265,5 +272,6 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
 
 
