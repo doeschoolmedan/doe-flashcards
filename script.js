@@ -181,21 +181,20 @@ function updateCard() {
  * 5. SOUND
  */
 function playSound() {
-    if (currentDeck.length === 0) return;
     const card = currentDeck[currentIndex];
-    const mainLang = document.getElementById('main-language').value;
-    const isSlow = document.getElementById('slow-mode').checked;
-
+    const mainLang = document.getElementById('main-language').value; // 'en', 'zh', or 'idn'
+    
+    // Create the path using the language folder
     const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim();
-    const audio = new Audio(`sounds/${mainLang}/${safeName}.mp3`);
-    audio.playbackRate = isSlow ? 0.6 : 1.0;
+    const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
 
-    audio.play().catch(() => {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(card[mainLang] || card.en);
-        const langMap = { "en": "en-US", "zh": "zh-TW", "idn": "id-ID" };
-        utterance.lang = langMap[mainLang] || "en-US";
-        utterance.rate = isSlow ? 0.6 : 1.0;
+    const audio = new Audio(audioPath);
+    
+    audio.play().catch(err => {
+        console.log("MP3 not found, using browser voice fallback");
+        // Fallback to browser voice if the file isn't uploaded yet
+        const utterance = new SpeechSynthesisUtterance(card[mainLang]);
+        utterance.lang = mainLang === 'zh' ? 'zh-TW' : (mainLang === 'idn' ? 'id-ID' : 'en-US');
         window.speechSynthesis.speak(utterance);
     });
 }
@@ -257,4 +256,5 @@ card.addEventListener('touchend', (e) => {
 });
 
 // Ensure initApp runs after everything is loaded
+
 window.onload = initApp;
