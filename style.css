@@ -588,3 +588,23 @@ body {
     transform: translateY(2px);
     box-shadow: 0 2px 0 #ccc;
 }
+.level-nav {
+    display: flex; 
+    justify-content: center; 
+    gap: 4px; /* Adjust this number to make them even closer */
+    margin: 15px 0;
+    flex-wrap: wrap; /* Helps if you add more levels later */
+}
+
+.level-nav button {
+    padding: 8px 12px; /* Making buttons slightly smaller also brings them closer */
+    font-size: 0.9rem;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+.card {
+    /* This tells the browser: "The script handles left/right, 
+       but you (the browser) should handle up/down scroll." */
+    touch-action: pan-y; 
+}
