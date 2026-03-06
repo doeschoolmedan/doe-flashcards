@@ -391,6 +391,9 @@ body {
     background-image: url('background.png'); /* Replace with your image's file name */
     background-color: #fffde7; /* Fallback cream color in case the image fails to load */
     background-repeat: repeat; /* Tiles the pattern across the screen */
+    background-repeat: no-repeat;  /* Stops the "seam" and tiling */
+    background-size: cover;        /* Stretches image to fill the screen */
+    background-position: center;   /* Keeps the artwork centered */
     background-attachment: fixed; /* Keeps the background static while content scrolls */
     margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -636,3 +639,4 @@ body {
     transform: scale(0.95);
     box-shadow: 0 2px 0 #ccaa00;
 }
+
