@@ -2,7 +2,10 @@
     --app-blue: #4da3ff;
     --btn-yellow: #ffcc00;
 }
-
+/* ADD THIS TO THE TOP OF STYLE.CSS */
+* {
+    box-sizing: border-box;
+}
 /* 1. Use the new background image */
 body {
     display: flex;
@@ -11,16 +14,21 @@ body {
     min-height: 100vh;      /* Take up the full screen height */
     margin: 0;
     padding: 0;
+    overflow-x: hidden;  /* Cuts off any accidental overflow */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Forces all content to stay on the center line */
 }
 
 /* This ensures the footer stays at the very bottom */
 .contact-footer {
-    margin-top: auto;       /* Pushes the footer down if there is extra space */
+    margin-top: 5px;       /* Pushes the footer down if there is extra space */
     width: 100%;
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 20px 0;
+    padding: 8px 0;
 }
 
 .app-container {
@@ -195,19 +203,20 @@ body {
 .app-footer {
     width: 100%;
     padding: 10px;
-    background-color: #f9f9f900;
     border-top: 1px solid #dddddd00;
     display: flex;
     flex-direction: column; /* Stacks items on top of each other */
     align-items: center;
     justify-content: center;
-    gap: 8px;
-  
+    gap: 2px;
+    margin: 0 auto;        /* Centers the text block */
 }
 /* 2. Fix the text scaling for the card count and level */
 .app-footer p {
     margin: 0;
     font-size: clamp(0.85rem, 4vw, 1.1rem);
+    color: #3b3939;
+    font-weight: bold;
     text-align: center;
     white-space: normal;    /* Allows text to wrap if name is long */
     width: 100%;
@@ -239,17 +248,15 @@ body {
     display: flex;
     flex-direction: column; /* Stacks items vertically */
     align-items: center;    /* Centers items horizontally */
-    gap: 15px;             /* Adds space between counter and turtle box */
-    padding: 20px 0;
-    margin-top: 20px;
+    gap: 1px;             /* Adds space between counter and turtle box */
+    padding: 10px 0;
+    margin-top: 1px;
 }
 
 /* Style the Slow Mode "Pill" */
 .turtle-box {
-    background-color: #8bf093;
-    padding: 10px 20px;
+    padding: 15px 20px;
     border-radius: 50px; /* Makes it a pill shape */
-    border: 1px solid #dee2e6;
     transition: all 0.2s ease;
     cursor: pointer;
     font-size: 0.9rem;
@@ -257,7 +264,7 @@ body {
 }
 
 .turtle-box:hover {
-    background-color: #4476a8;
+    background-color: #4476a800;
     transform: translateY(-2px); /* Subtle lift on hover */
 }
 
@@ -391,6 +398,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow-x: hidden; /* Stops side-to-side wiggle */
+    position: relative;
 }
 /* Animation for the card appearing */
 @keyframes cardPop {
@@ -492,14 +501,10 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    margin-top: 30px;
-    background: rgba(255, 255, 255, 0.089); /* Subtle glass effect */
-    border-radius: 20px;
+    margin-top: 5px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 1.1rem;
-    color: #333;
+    color: #070707e5;
 }
 
 .contact-item {
@@ -531,7 +536,7 @@ body {
 
 .app-logo {
     display: block;   /* Removes the small gap at the bottom of images */
-    max-width: 130px; 
+    max-width: 100px; 
     height: auto;
     margin: 0 auto;   /* Ensures it stays centered without extra top/bottom space */
 }
@@ -611,8 +616,8 @@ body {
 .secondary-controls {
     display: flex;
     justify-content: center;
-    margin-top: 15px; /* Space between arrows and shuffle */
-    margin-bottom: 30px; /* Space before the footer */
+    margin-top: 0px; /* Space between arrows and shuffle */
+    margin-bottom: 0px; /* Space before the footer */
 }
 
 .btn-shuffle {
