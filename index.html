@@ -13,81 +13,81 @@
         </div>
         <h1 class="app-title">MULTI-LANG FLASHCARDS FOR KIDS</h1>
 
-        <div class="lang-selector">
-            <div class="lang-group">
-                <label for="main-language">Main Language:</label>
-                <select id="main-language" onchange="updateCard()">
-                    <option value="en">English</option>
-                    <option value="zh">Traditional Chinese</option>
-                    <option value="idn">Bahasa Indonesia</option>
-                </select>
-            </div>
-
-            <div class="lang-group">
-                <label for="translate-language">Translate to:</label>
-                <select id="translate-language" onchange="updateCard()">
-                    <option value="zh">Traditional Chinese</option>
-                    <option value="idn" selected>Bahasa Indonesia</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
+    <div class="lang-selector">
+        <div class="lang-group">
+            <label for="main-language">Main Language:</label>
+            <select id="main-language" onchange="updateCard()">
+                <option value="en">English</option>
+                <option value="zh">Traditional Chinese</option>
+                <option value="idn">Bahasa Indonesia</option>
+            </select>
         </div>
-    </header>
 
-    <nav class="level-nav" style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
-        <button onclick="filterByLevel('all')" class="btn-all active">🌈 ALL</button>
-        <button onclick="filterByLevel('basic')" class="btn-basic">🌱 BASIC</button>
-        <button onclick="filterByLevel('moderate')" class="btn-moderate">⚙️ MODERATE</button>
-        <button onclick="filterByLevel('hard')" class="btn-hard">💡 HARD</button>
-    </nav>
-
-    <div class="category-wrapper" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-        <nav class="category-nav" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 0;">
-            <button onclick="filterByCategory('all', event)" class="cat-btn active">🌈All</button>
-            <button onclick="filterByCategory('animals', event)" class="cat-btn">🐶Animals</button>
-            <button onclick="filterByCategory('fruits', event)" class="cat-btn">🍎Fruits</button>
-            <button onclick="filterByCategory('vegetables', event)" class="cat-btn">🥦Vegetables</button>
-            <button onclick="filterByCategory('household', event)" class="cat-btn">🏠Household</button>
-            <button onclick="filterByCategory('school', event)" class="cat-btn">✏️School</button>
-            <button onclick="filterByCategory('nature', event)" class="cat-btn">🌲Nature</button>
-            <button onclick="filterByCategory('transportation', event)" class="cat-btn">🚗Transportation</button>
-            <button onclick="filterByCategory('workforce', event)" class="cat-btn">👷🏻‍♂️Workforce</button>
-            <button onclick="filterByCategory('verbs', event)" class="cat-btn">📝Verbs</button>
-            <button onclick="filterByCategory('adjectives', event)" class="cat-btn">🗣️Adjectives</button>
-        </nav>
+        <div class="lang-group">
+            <label for="translate-language">Translate to:</label>
+            <select id="translate-language" onchange="updateCard()">
+                <option value="zh">Traditional Chinese</option>
+                <option value="idn" selected>Bahasa Indonesia</option>
+                <option value="en">English</option>
+            </select>
+        </div>
     </div>
+</header>
+        <nav class="level-nav" style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
+    <button onclick="filterByLevel('all')" class="btn-all" style="background: #eee; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">🌈 ALL</button>
+    <button onclick="filterByLevel('basic')" class="btn-basic">🌱 BASIC</button>
+    <button onclick="filterByLevel('moderate')" class="btn-moderate">⚙️ MODERATE</button>
+    <button onclick="filterByLevel('hard')" class="btn-hard">💡 HARD</button>
+</nav>
 
-    <main class="card-display">
-        <button class="nav-btn" onclick="changeCard(-1)">❮</button>
-        
-        <div class="card">
-            <div class="image-placeholder">
-                <div id="card-level-tag" class="level-tag">BASIC</div>
-                <img id="card-img" src="" alt="Word Image">
-                <div id="emoji-display" class="large-emoji"></div>
-            </div>
-            <h1 id="primary-word">---</h1>
-            <div class="translations">
-                <p><span id="zh-word">---</span></p>
-                <p id="idn-word-container" style="display:none;"><span id="idn-word">---</span></p>
-            </div>
-            <button class="play-btn" onclick="playSound()">
-                <div class="play-icon">🔊</div>
-                <span>PLAY SOUND</span>
-            </button>
+        <div class="category-wrapper" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+    
+    <nav class="category-nav" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 0;">
+    <button onclick="filterByCategory('all', event)" class="cat-btn active">🌈All</button>
+    <button onclick="filterByCategory('animals', event)" class="cat-btn">🐶Animals</button>
+    <button onclick="filterByCategory('fruits', event)" class="cat-btn">🍎Fruits</button>
+    <button onclick="filterByCategory('vegetables', event)" class="cat-btn">🥦Vegetables</button>
+    <button onclick="filterByCategory('household', event)" class="cat-btn">🏠Household</button>
+    <button onclick="filterByCategory('school', event)" class="cat-btn">✏️School</button>
+    <button onclick="filterByCategory('nature', event)" class="cat-btn">🌲Nature</button>
+    <button onclick="filterByCategory('transportation', event)" class="cat-btn">🚗Transportation</button>
+    <button onclick="filterByCategory('workforce', event)" class="cat-btn">👷🏻‍♂️Workforce</button>
+    <button onclick="filterByCategory('verbs', event)" class="cat-btn">📝Verbs</button>
+    <button onclick="filterByCategory('adjectives', event)" class="cat-btn">🗣️Adjectives</button>
+</nav>
+    
+</div>
+
+        <main class="card-display">
+    <div class="card">
+        <div class="image-placeholder">
+            <div id="card-level-tag" class="level-tag">BASIC</div>
+            <img id="card-img" src="" alt="Word Image" onerror="this.style.display='none'">
+            <div id="emoji-display" class="large-emoji"></div>
         </div>
+        <h1 id="primary-word">---</h1>
+        <div class="translations">
+            <p><span id="zh-word">---</span></p>
+            <p style="display:none;"><span id="idn-word">---</span></p>
+        </div>
+        <button class="play-btn" onclick="playSound()">
+            <div class="play-icon">🔊</div>
+            <span>PLAY SOUND</span>
+        </button>
+    </div>
+</main>
 
-        <button class="nav-btn" onclick="changeCard(1)">❯</button>
-    </main>
-
-    <footer class="app-footer">
+<div class="navigation-controls">
+    <button class="nav-btn-bottom" onclick="changeCard(-1)">❮ PREV</button>
+    <button class="nav-btn-bottom" onclick="changeCard(1)">NEXT ❯</button>
+</div>
+        </main>
+ <footer class="app-footer">
         <p>CARD: <span id="current-count">0</span> / <span id="total-count">500</span></p>
         <div class="turtle-box">
             <label><input type="checkbox" id="slow-mode"> 🐢 Slow Mode</label>
         </div>
-    </footer>
-
-    <footer class="contact-footer" style="text-align: center; padding: 10px;">
+    <footer class="contact-footer">
         <div class="contact-item">🅾 doe.school</div>
         <div class="contact-item">♪ doe.school</div>
         <div class="contact-item">📲 0821-6097-6036</div>
