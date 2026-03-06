@@ -226,16 +226,21 @@ function scrollCategories(direction) {
  * 7. SWIPE GESTURES FOR MOBILE
  */
 let startX = 0;
+let startY = 0;
 let currentX = 0;
+let isSwiping = false; 
 const card = document.querySelector('.card');
 
 // Prevent blue highlighting/selection on the card content
 card.style.userSelect = 'none';
 card.style.webkitUserSelect = 'none';
-let isSwiping = false; // Add this variable at the top with startX
 
 card.addEventListener('touchstart', (e) => {
-    const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
+    // 1. PLACE THE BUTTON CHECK HERE
+    const isButton = e.target.tagName === 'BUTTON' || 
+                     e.target.closest('button') || 
+                     e.target.classList.contains('btn-shuffle');
+
     if (isButton) {
         startX = 0;
         return; 
@@ -243,7 +248,7 @@ card.addEventListener('touchstart', (e) => {
 
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
-    isSwiping = false; // Reset the lock
+    isSwiping = false; 
     card.style.transition = 'none';
 }, { passive: true });
 
@@ -254,32 +259,30 @@ card.addEventListener('touchmove', (e) => {
     const diffX = touch.clientX - startX;
     const diffY = touch.clientY - startY;
 
-    // 1. If we haven't decided if this is a swipe or a scroll yet:
     if (!isSwiping) {
-        // If moving vertically MORE than horizontally, let it scroll
+        // If moving vertically more than horizontally, let it scroll
         if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 10) {
             startX = 0; 
             return; 
         }
-        // If moving horizontally MORE than 10px, lock it as a swipe
+        // If moving horizontally more than 10px, lock it as a swipe
         if (Math.abs(diffX) > 10) {
             isSwiping = true;
         }
     }
 
-    // 2. Once locked as a swipe, prevent scrolling and move the card
     if (isSwiping) {
         if (e.cancelable) e.preventDefault(); 
         currentX = touch.clientX;
         card.style.transform = `translateX(${diffX}px) rotate(${diffX / 20}deg)`;
     }
-}, { passive: false }); // Must be false to allow e.preventDefault()
+}, { passive: false });
 
 card.addEventListener('touchend', (e) => {
     if (startX === 0) return;
 
     const diff = currentX - startX;
-    const threshold = 150; // Higher threshold for toddlers
+    const threshold = 150; 
 
     card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
 
@@ -300,6 +303,32 @@ card.addEventListener('touchend', (e) => {
 
 window.onload = initApp;
 
+/**
+ * Shuffles the current filtered list of cards
+ */
+function shuffleCards() {
+    // 1. USE THE CORRECT LIST NAME: currentDeck
+    if (!currentDeck || currentDeck.length === 0) {
+        console.error("No cards found in the current deck to shuffle!");
+        return;
+    }
 
+    // 2. The Shuffle Logic
+    for (let i = currentDeck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [currentDeck[i], currentDeck[j]] = [currentDeck[j], currentDeck[i]];
+    }
+
+    // 3. Reset index and refresh the UI
+    currentIndex = 0;
+    updateCard(); 
+
+    // Visual feedback (Flash yellow border)
+    const cardElement = document.querySelector('.card');
+    if (cardElement) {
+        cardElement.style.border = "5px solid #ffcc00";
+        setTimeout(() => { cardElement.style.border = "none"; }, 300);
+    }
+}
 
 
