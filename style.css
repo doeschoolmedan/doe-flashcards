@@ -608,3 +608,26 @@ body {
        but you (the browser) should handle up/down scroll." */
     touch-action: pan-y; 
 }
+.secondary-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px; /* Space between arrows and shuffle */
+    margin-bottom: 30px; /* Space before the footer */
+}
+
+.btn-shuffle {
+    background: #ffcc00; /* Bright yellow for kids */
+    border: none;
+    padding: 12px 40px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 4px 0 #c2c1bc;
+    transition: transform 0.1s;
+}
+
+.btn-shuffle:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 0 #ccaa00;
+}
