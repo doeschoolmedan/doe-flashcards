@@ -183,37 +183,38 @@ function updateCard() {
 function playSound() {
     const card = currentDeck[currentIndex];
     const mainLang = document.getElementById('main-language').value; 
-    const isSlow = document.getElementById('slow-mode').checked; 
+    const isSlow = document.getElementById('slow-mode').checked;
     
-    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim().toLowerCase(); 
+    // Clean filename logic
+    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim().toLowerCase();
     const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
 
-    const audio = new Audio(audioPath);
+    const audio = new Audio();
+    audio.src = audioPath;
     
-    // 1. Prepare the file for iPhone
+    // iOS fix: Set speed before playing
+    audio.playbackRate = isSlow ? 0.6 : 1.0;
+    
+    // iOS fix: Explicitly call load() then play()
     audio.load(); 
     
-    // 2. Set the speed BEFORE playing
-    if (isSlow) {
-        audio.playbackRate = 0.6; 
+    const playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+        playPromise.catch(error => {
+            console.warn("MP3 blocked or not found, trying Voice...");
+            
+            // Fallback to Browser Voice (TTS)
+            const utterance = new SpeechSynthesisUtterance(card[mainLang]);
+            utterance.rate = isSlow ? 0.6 : 1.0;
+
+            if (mainLang === 'zh') utterance.lang = 'zh-TW';
+            else if (mainLang === 'idn') utterance.lang = 'id-ID';
+            else utterance.lang = 'en-US';
+            
+            window.speechSynthesis.speak(utterance);
+        });
     }
-
-    // 3. Try to play the MP3
-    audio.play().catch(err => {
-        console.warn("MP3 not found or blocked. Using browser voice.");
-        
-        // 4. Fallback to browser voice if MP3 fails
-        const utterance = new SpeechSynthesisUtterance(card[mainLang]);
-        
-        // Set browser voice speed
-        utterance.rate = isSlow ? 0.6 : 1.0; 
-
-        if (mainLang === 'zh') utterance.lang = 'zh-TW';
-        else if (mainLang === 'idn') utterance.lang = 'id-ID';
-        else utterance.lang = 'en-US';
-        
-        window.speechSynthesis.speak(utterance);
-    });
 }
 
 /**
@@ -282,6 +283,7 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
 
 
 
