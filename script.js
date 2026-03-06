@@ -234,24 +234,32 @@ let startX = 0;
 let currentX = 0;
 const card = document.querySelector('.card');
 
+// CSS fix: Prevents the "blue highlight" or selection box when touching text/emojis
+card.style.userSelect = 'none';
+card.style.webkitUserSelect = 'none'; // For iPhone Safari
+
 card.addEventListener('touchstart', (e) => {
-    // UPDATED LINE: Added checks for text, emojis, and images
-    if (
-        e.target.tagName === 'BUTTON' || 
-        e.target.closest('button') || 
-        e.target.classList.contains('play-icon') ||
-        e.target.id === 'emoji-display' || 
-        e.target.id === 'primary-word' || 
-        e.target.id === 'card-img'
-    ) {
-        return; // This stops the swipe logic from starting
+    // Check if the user touched a button or the main content
+    const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
+    const isIcon = e.target.classList.contains('play-icon');
+    const isContent = e.target.id === 'emoji-display' || 
+                      e.target.id === 'primary-word' || 
+                      e.target.id === 'card-img';
+
+    if (isButton || isIcon || isContent) {
+        startX = 0; // Reset to 0 so no movement is calculated
+        return; 
     }
 
     startX = e.touches[0].clientX;
+    currentX = startX; // Initialize currentX to startX to prevent "jumpy" starts
     card.style.transition = 'none';
 });
 
 card.addEventListener('touchmove', (e) => {
+    // If startX is 0, it means we touched content and should NOT swipe
+    if (startX === 0) return;
+
     currentX = e.touches[0].clientX;
     const diff = currentX - startX;
     
@@ -260,8 +268,10 @@ card.addEventListener('touchmove', (e) => {
 });
 
 card.addEventListener('touchend', (e) => {
+    if (startX === 0) return; // Ignore if the touch started on content
+
     const diff = currentX - startX;
-    const threshold = 100; // Distance needed to flip the card
+    const threshold = 150; // Increased threshold to prevent accidental skips by toddlers
 
     card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
 
@@ -276,6 +286,8 @@ card.addEventListener('touchend', (e) => {
         // Snap back if swipe wasn't far enough
         card.style.transform = 'translateX(0) rotate(0)';
     }
+    
+    // Reset values for the next touch
     startX = 0;
     currentX = 0;
 });
@@ -283,6 +295,7 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
 
 
 
