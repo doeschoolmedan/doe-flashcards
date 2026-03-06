@@ -279,10 +279,15 @@ card.addEventListener('touchmove', (e) => {
 }, { passive: false });
 
 card.addEventListener('touchend', (e) => {
-    if (startX === 0) return;
+    if (startX === 0 || !isSwiping) { // ADDED !isSwiping check
+        // If it was just a click/tap and not a swipe, do nothing
+        startX = 0;
+        currentX = 0;
+        return; 
+    }
 
     const diff = currentX - startX;
-    const threshold = 150; 
+    const threshold = 100; // Lowered slightly for better feel
 
     card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
 
@@ -295,8 +300,11 @@ card.addEventListener('touchend', (e) => {
     } else {
         card.style.transform = 'translateX(0) rotate(0)';
     }
+    
+    // Reset everything
     startX = 0;
     currentX = 0;
+    isSwiping = false; 
 });
 
 // Ensure initApp runs after everything is loaded
