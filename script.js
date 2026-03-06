@@ -234,16 +234,16 @@ card.style.userSelect = 'none';
 card.style.webkitUserSelect = 'none';
 
 card.addEventListener('touchstart', (e) => {
-    // ONLY ignore touches on actual buttons
-    const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
-    const isIcon = e.target.classList.contains('play-icon');
-
-    if (isButton || isIcon) {
-        startX = 0; 
+    // Check for buttons or anything that shouldn't start a swipe
+    if (
+        e.target.tagName === 'BUTTON' || 
+        e.target.closest('button') || 
+        e.target.classList.contains('nav-btn-bottom') // Added check for new buttons
+    ) {
+        startX = 0;
         return; 
     }
 
-    // Now, touching the emoji or text WILL allow swiping
     startX = e.touches[0].clientX;
     currentX = startX;
     card.style.transition = 'none';
