@@ -183,38 +183,33 @@ function updateCard() {
 function playSound() {
     const card = currentDeck[currentIndex];
     const mainLang = document.getElementById('main-language').value; 
+    
+    // Check if the 🐢 Slow Mode checkbox is ticked
     const isSlow = document.getElementById('slow-mode').checked;
     
-    // Clean filename logic
-    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim();
+    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim(); 
     const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
 
-    const audio = new Audio();
-    audio.src = audioPath;
+    const audio = new Audio(audioPath);
     
-    // iOS fix: Set speed before playing
-    audio.playbackRate = isSlow ? 0.6 : 1.0;
-    
-    // iOS fix: Explicitly call load() then play()
-    audio.load(); 
-    
-    const playPromise = audio.play();
-
-    if (playPromise !== undefined) {
-        playPromise.catch(error => {
-            console.warn("MP3 blocked or not found, trying Voice...");
-            
-            // Fallback to Browser Voice (TTS)
-            const utterance = new SpeechSynthesisUtterance(card[mainLang]);
-            utterance.rate = isSlow ? 0.6 : 1.0;
-
-            if (mainLang === 'zh') utterance.lang = 'zh-TW';
-            else if (mainLang === 'idn') utterance.lang = 'id-ID';
-            else utterance.lang = 'en-US';
-            
-            window.speechSynthesis.speak(utterance);
-        });
+    // Adjust speed for the MP3 file if slow mode is on
+    if (isSlow) {
+        audio.playbackRate = 0.6; 
     }
+
+    audio.play().catch(err => {
+        console.warn("MP3 not found. Using browser voice.");
+        const utterance = new SpeechSynthesisUtterance(card[mainLang]);
+        
+        // Adjust speed for the browser voice if slow mode is on
+        utterance.rate = isSlow ? 0.6 : 1.0; 
+
+        if (mainLang === 'zh') utterance.lang = 'zh-TW';
+        else if (mainLang === 'idn') utterance.lang = 'id-ID';
+        else utterance.lang = 'en-US';
+        
+        window.speechSynthesis.speak(utterance);
+    });
 }
 
 /**
@@ -234,60 +229,51 @@ let startX = 0;
 let currentX = 0;
 const card = document.querySelector('.card');
 
-// CSS fix: Prevents the "blue highlight" or selection box when touching text/emojis
+// Prevent blue highlighting/selection on the card content
 card.style.userSelect = 'none';
-card.style.webkitUserSelect = 'none'; // For iPhone Safari
+card.style.webkitUserSelect = 'none';
 
 card.addEventListener('touchstart', (e) => {
-    // Check if the user touched a button or the main content
+    // ONLY ignore touches on actual buttons
     const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
     const isIcon = e.target.classList.contains('play-icon');
-    const isContent = e.target.id === 'emoji-display' || 
-                      e.target.id === 'primary-word' || 
-                      e.target.id === 'card-img';
 
-    if (isButton || isIcon || isContent) {
-        startX = 0; // Reset to 0 so no movement is calculated
+    if (isButton || isIcon) {
+        startX = 0; 
         return; 
     }
 
+    // Now, touching the emoji or text WILL allow swiping
     startX = e.touches[0].clientX;
-    currentX = startX; // Initialize currentX to startX to prevent "jumpy" starts
+    currentX = startX;
     card.style.transition = 'none';
 });
 
 card.addEventListener('touchmove', (e) => {
-    // If startX is 0, it means we touched content and should NOT swipe
-    if (startX === 0) return;
+    if (startX === 0) return; // Stay still if touching content
 
     currentX = e.touches[0].clientX;
     const diff = currentX - startX;
-    
-    // Move the card and rotate it slightly for a "bouncy" feel
     card.style.transform = `translateX(${diff}px) rotate(${diff / 20}deg)`;
 });
 
 card.addEventListener('touchend', (e) => {
-    if (startX === 0) return; // Ignore if the touch started on content
+    if (startX === 0) return;
 
     const diff = currentX - startX;
-    const threshold = 150; // Increased threshold to prevent accidental skips by toddlers
+    const threshold = 150; // Higher threshold for toddlers
 
     card.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
 
     if (Math.abs(diff) > threshold) {
-        // Successful swipe
         card.style.transform = `translateX(${diff > 0 ? 1000 : -1000}px)`;
         setTimeout(() => {
             changeCard(diff > 0 ? -1 : 1);
             card.style.transform = 'translateX(0) rotate(0)';
         }, 200);
     } else {
-        // Snap back if swipe wasn't far enough
         card.style.transform = 'translateX(0) rotate(0)';
     }
-    
-    // Reset values for the next touch
     startX = 0;
     currentX = 0;
 });
@@ -295,10 +281,6 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
-
-
-
-
 
 
 
