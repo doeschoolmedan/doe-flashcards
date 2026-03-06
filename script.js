@@ -183,25 +183,29 @@ function updateCard() {
 function playSound() {
     const card = currentDeck[currentIndex];
     const mainLang = document.getElementById('main-language').value; 
-    
-    // Check if the 🐢 Slow Mode checkbox is ticked
-    const isSlow = document.getElementById('slow-mode').checked;
+    const isSlow = document.getElementById('slow-mode').checked; 
     
     const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim().toLowerCase(); 
     const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
 
     const audio = new Audio(audioPath);
     
-    // Adjust speed for the MP3 file if slow mode is on
+    // 1. Prepare the file for iPhone
+    audio.load(); 
+    
+    // 2. Set the speed BEFORE playing
     if (isSlow) {
         audio.playbackRate = 0.6; 
     }
 
+    // 3. Try to play the MP3
     audio.play().catch(err => {
-        console.warn("MP3 not found. Using browser voice.");
+        console.warn("MP3 not found or blocked. Using browser voice.");
+        
+        // 4. Fallback to browser voice if MP3 fails
         const utterance = new SpeechSynthesisUtterance(card[mainLang]);
         
-        // Adjust speed for the browser voice if slow mode is on
+        // Set browser voice speed
         utterance.rate = isSlow ? 0.6 : 1.0; 
 
         if (mainLang === 'zh') utterance.lang = 'zh-TW';
@@ -278,6 +282,7 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
 
 
 
