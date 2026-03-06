@@ -232,30 +232,48 @@ const card = document.querySelector('.card');
 // Prevent blue highlighting/selection on the card content
 card.style.userSelect = 'none';
 card.style.webkitUserSelect = 'none';
+let isSwiping = false; // Add this variable at the top with startX
 
 card.addEventListener('touchstart', (e) => {
-    // Check for buttons or anything that shouldn't start a swipe
-    if (
-        e.target.tagName === 'BUTTON' || 
-        e.target.closest('button') || 
-        e.target.classList.contains('nav-btn-bottom') // Added check for new buttons
-    ) {
+    const isButton = e.target.tagName === 'BUTTON' || e.target.closest('button');
+    if (isButton) {
         startX = 0;
         return; 
     }
 
     startX = e.touches[0].clientX;
-    currentX = startX;
+    startY = e.touches[0].clientY;
+    isSwiping = false; // Reset the lock
     card.style.transition = 'none';
-});
+}, { passive: true });
 
 card.addEventListener('touchmove', (e) => {
-    if (startX === 0) return; // Stay still if touching content
+    if (startX === 0) return;
 
-    currentX = e.touches[0].clientX;
-    const diff = currentX - startX;
-    card.style.transform = `translateX(${diff}px) rotate(${diff / 20}deg)`;
-});
+    const touch = e.touches[0];
+    const diffX = touch.clientX - startX;
+    const diffY = touch.clientY - startY;
+
+    // 1. If we haven't decided if this is a swipe or a scroll yet:
+    if (!isSwiping) {
+        // If moving vertically MORE than horizontally, let it scroll
+        if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 10) {
+            startX = 0; 
+            return; 
+        }
+        // If moving horizontally MORE than 10px, lock it as a swipe
+        if (Math.abs(diffX) > 10) {
+            isSwiping = true;
+        }
+    }
+
+    // 2. Once locked as a swipe, prevent scrolling and move the card
+    if (isSwiping) {
+        if (e.cancelable) e.preventDefault(); 
+        currentX = touch.clientX;
+        card.style.transform = `translateX(${diffX}px) rotate(${diffX / 20}deg)`;
+    }
+}, { passive: false }); // Must be false to allow e.preventDefault()
 
 card.addEventListener('touchend', (e) => {
     if (startX === 0) return;
