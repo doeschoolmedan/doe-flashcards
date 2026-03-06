@@ -186,7 +186,7 @@ function playSound() {
     const isSlow = document.getElementById('slow-mode').checked;
     
     // Clean filename logic
-    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim().toLowerCase();
+    const safeName = card.en.replace(/[^a-zA-Z0-9 _]/g, "").trim();
     const audioPath = `sounds/${mainLang}/${safeName}.mp3`;
 
     const audio = new Audio();
@@ -283,6 +283,7 @@ card.addEventListener('touchend', (e) => {
 // Ensure initApp runs after everything is loaded
 
 window.onload = initApp;
+
 
 
 
